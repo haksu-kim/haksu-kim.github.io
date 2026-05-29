@@ -38,7 +38,14 @@ plainwhite:
     #soundcloud: jekyll
     #telegram: jekyll
     #gitlab: jekyll
-    #email: jekyll
+    email: haksu2960@gmail.com
+
+  comments:
+    provider: utterances # utterances | disqus | none
+    utterances:
+      repo: haksu-kim/haksu-kim.github.io
+      issue_term: pathname # pathname | url | title | og:title
+      theme: github-dark
 
     # Mastodon instances
     # mastodon:

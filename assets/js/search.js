@@ -2,47 +2,75 @@
 ---
 
 window.onload = function () {
-    var $searchbar = document.getElementById('searchbar');
+    var $searchbar = document.getElementById('search-input');
     var $searchResults = document.getElementById('search-results');
+    var posts = [];
 
     if (!$searchbar || !$searchResults)
         return;
 
-    SimpleJekyllSearch({
-        searchInput: $searchbar,
-        resultsContainer: $searchResults,
-        json: '{{ "/search.json" | relative_url }}',
-        searchResultTemplate: '<a href="{url}" target="_blank">{title}</a>',
-        noResultsText: ''
-    });
-
-    /* hack ios safari unfocus */
-    if (/Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent))
-        document.body.firstElementChild.tabIndex = 1;
-
-    var $labelGroup = document.querySelector(".posts-labelgroup");
-    var $postLabel = document.getElementById("posts-label");
-    var labelWidth = $postLabel.scrollWidth;
-
-    $postLabel.style.width = labelWidth + "px";
-
-    $labelGroup.addEventListener("click", function (e) {
-        $searchResults.style.display = null;
-        $postLabel.style.width = "0";
-        $labelGroup.setAttribute("class", "posts-labelgroup focus-within");
-        $searchbar.focus();
-        e.stopPropagation();
-    }, false);
-
-    $labelGroup.addEventListener("mouseleave", function () {
-        document.body.onclick = searchCollapse;
-    });
-
-    var searchCollapse = function (e) {
-        $searchResults.style.display = "none";
-        $labelGroup.setAttribute("class", "posts-labelgroup");
-        $postLabel.style.width = labelWidth + "px";
-        document.body.onclick = null;
+    var escapeHtml = function (value) {
+        return String(value || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
     };
-}
 
+    var renderResults = function () {
+        var query = $searchbar.value.trim().toLowerCase();
+
+        if (!query) {
+            $searchResults.style.display = 'none';
+            $searchResults.innerHTML = '';
+            return;
+        }
+
+        var results = posts.filter(function (post) {
+            return [
+                post.title,
+                post.categories,
+                post.tags,
+                post.content
+            ].join(' ').toLowerCase().indexOf(query) > -1;
+        }).slice(0, 6);
+
+        $searchResults.style.display = 'block';
+
+        if (!results.length) {
+            $searchResults.innerHTML = '<span class="search-empty">No results found</span>';
+            return;
+        }
+
+        $searchResults.innerHTML = results.map(function (post) {
+            return '<a href="' + post.url + '">' + escapeHtml(post.title) + '</a>';
+        }).join('');
+    };
+
+    var request = new XMLHttpRequest();
+    request.open('GET', '{{ "/search.json" | relative_url }}', true);
+    request.onload = function () {
+        if (request.status < 200 || request.status >= 300)
+            return;
+
+        try {
+            posts = JSON.parse(request.responseText);
+            renderResults();
+        } catch (error) {
+            posts = [];
+            $searchResults.style.display = 'none';
+            $searchResults.innerHTML = '';
+        }
+    };
+    request.send();
+
+    $searchbar.addEventListener('input', function () {
+        renderResults();
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!event.target.closest('.search-container'))
+            $searchResults.style.display = 'none';
+    });
+}

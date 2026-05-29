@@ -1,6 +1,7 @@
 ---
 layout: default
 ---
+
 {%- assign date_format = site.plainwhite.date_format | default: "%b %-d, %Y" -%}
 <div class="post-container">
   <a class="post-link" href="{{ page.url | relative_url }}">
@@ -19,7 +20,18 @@ layout: default
   <div class="post">
     {{ content }}
   </div>
-  {%- if site.plainwhite.disqus_shortname -%}
+  {%- if site.plainwhite.comments.provider == "utterances" and site.plainwhite.comments.utterances.repo -%}
+  <section class="post-comments" style="margin-top: 30px;">
+    <script
+      src="https://utteranc.es/client.js"
+      repo="{{ site.plainwhite.comments.utterances.repo }}"
+      issue-term="{{ site.plainwhite.comments.utterances.issue_term | default: 'pathname' }}"
+      theme="{{ site.plainwhite.comments.utterances.theme | default: 'github-dark' }}"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </section>
+  {%- elsif site.plainwhite.comments.provider == "disqus" and site.plainwhite.disqus_shortname -%}
   <div id="disqus_thread" style="margin-top:25px"></div>
   <script>
     var disqus_config = function () {
