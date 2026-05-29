@@ -562,7 +562,7 @@ body {
 
 .right-sidebar {
   position: fixed;
-  top: 100px;
+  top: 136px;
   right: 43px;
 
   width: 200px;
@@ -571,10 +571,15 @@ body {
 
 .recent-posts,
 .market-panel {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
   padding: 20px;
 
-  background: #1b1f27;
-  border-radius: 14px;
+  background: #1b1f27 !important;
+  border: 1px solid #2b3240;
+  border-radius: 14px !important;
 
   color: #ddd;
 }
