@@ -8,13 +8,30 @@
   @import "dark";
 {%- endif -%}
 
+:root {
+  --sidebar-w: clamp(260px, 24vw, 380px);
+  --right-w: 280px;
+  --right-gap: 60px;
+  --bg-main: #10141b;
+  --bg-panel: #1a212c;
+  --bg-panel-soft: #212b38;
+  --text-main: #dbe4ef;
+  --text-soft: #a8b6c8;
+  --line-soft: #2f3b4b;
+  --accent: #8fc1ff;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --shadow-soft: 0 10px 28px rgba(0, 0, 0, 0.25);
+}
+
 /* =========================
    Base
 ========================= */
 
 body {
-  background: #111;
-  color: #ddd;
+  background: var(--bg-main);
+  color: var(--text-main);
+  line-height: 1.7;
 }
 
 .layout {
@@ -26,8 +43,9 @@ body {
 ========================= */
 
 .sidebar {
-  width: 260px;
+  width: var(--sidebar-w);
   height: 100vh;
+  box-sizing: border-box;
 
   position: fixed;
   top: 0;
@@ -36,8 +54,9 @@ body {
 
   padding: 30px 20px;
 
-  background: #1b1f27;
+  background: var(--bg-panel);
   color: white;
+  box-shadow: 8px 0 24px rgba(0, 0, 0, 0.18);
 
   overflow-y: auto;
 
@@ -62,14 +81,14 @@ body {
   margin: 15px 0 0;
 
   font-size: 24px;
-  color: #aaa !important;
+  color: var(--text-soft) !important;
 }
 
 .profile p {
   margin-top: 6px;
 
   font-size: 14px;
-  color: #aaa;
+  color: var(--text-soft);
 }
 
 /* =========================
@@ -85,7 +104,7 @@ body {
   margin: 25px 0 10px;
 
   font-size: 12px;
-  color: #888;
+  color: var(--text-soft);
   letter-spacing: 0.08em;
 }
 
@@ -97,20 +116,20 @@ body {
 
   padding: 10px 12px;
 
-  color: #aaa;
+  color: var(--text-soft);
   text-decoration: none;
 
-  border-radius: 8px;
+  border-radius: var(--radius-md);
 
-  transition: 0.2s;
+  transition: background-color 0.22s ease, color 0.22s ease, transform 0.22s ease;
 }
 
 .menu-item:hover,
 .category-list a:hover {
-  background: #222;
+  background: var(--bg-panel-soft);
   color: white;
 
-  transform: translateX(4px);
+  transform: translateX(2px);
 }
 
 .menu-icon {
@@ -186,41 +205,47 @@ body {
 ========================= */
 
 .content {
-  margin-left: 260px;
-  margin-right: 160px;
-  padding: 50px 40px 50px 12px;
+  margin-left: calc(var(--sidebar-w) + 20px);
+  margin-right: calc(var(--right-w) + var(--right-gap));
+  padding: 50px clamp(20px, 3vw, 40px) 50px 12px;
 
   min-height: 70vh;
 
-  background: #111;
-  color: #ddd;
+  background: var(--bg-main);
+  color: var(--text-main);
 }
 
 .content a {
-  color: #9cc9ff;
+  color: var(--accent);
+  transition: color 0.2s ease;
+}
+
+.content a:hover {
+  color: #b4d6ff;
 }
 
 .content code,
 .content pre {
-  background: #1e1e1e;
+  background: #18202b;
 }
 
 .content div.highlight {
   padding: 0;
-  background: #1e1e1e;
-  border: 1px solid #333;
-  border-radius: 10px;
+  background: #18202b;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-md);
   overflow: hidden;
+  box-shadow: var(--shadow-soft);
 }
 
 .content .highlight {
-  background: #1e1e1e;
+  background: #18202b;
 }
 
 .content pre.highlight {
   margin: 0;
   padding: 14px 16px;
-  background: #1e1e1e;
+  background: #18202b;
 }
 
 .post {
@@ -241,7 +266,7 @@ body {
   padding-bottom: 35px;
   margin-bottom: 35px;
 
-  border-bottom: 1px solid #2a2a2a;
+  border-bottom: 1px solid var(--line-soft);
 }
 
 .post-title,
@@ -249,7 +274,7 @@ body {
 .post h1,
 .post h2,
 .post h3 {
-  color: #f5f5f5 !important;
+  color: #f2f7ff !important;
 }
 
 .posts li p,
@@ -270,7 +295,7 @@ body {
 
 .post-title:hover,
 .post-link:hover {
-  color: #9cc9ff !important;
+  color: var(--accent) !important;
 
   transition: 0.2s;
 }
@@ -312,20 +337,20 @@ body {
 .search-container {
   position: fixed;
   top: 20px;
-  right: 30px;
+  right: 43px;
   z-index: 3000;
 
-  width: 220px;
+  width: 280px;
 }
 
 .search-input {
   width: 100%;
   padding: 12px 18px;
 
-  border: 1px solid #333;
+  border: 1px solid var(--line-soft);
   border-radius: 999px;
 
-  background: #232936;
+  background: #1f2733;
   color: white;
 
   outline: none;
@@ -339,16 +364,16 @@ body {
 }
 
 .search-input:hover {
-  background: #2b3240;
+  background: #263243;
 }
 
 .search-input:focus {
-  border-color: #9cc9ff;
+  border-color: var(--accent);
   box-shadow: 0 0 12px rgba(156, 201, 255, 0.25);
 }
 
 .search-container:focus-within {
-  width: 260px;
+  width: 280px;
 }
 
 .search-results {
@@ -364,8 +389,8 @@ body {
 
   padding: 8px;
 
-  background: #1b1f27;
-  border: 1px solid #333;
+  background: var(--bg-panel);
+  border: 1px solid var(--line-soft);
   border-radius: 12px;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
 }
@@ -384,8 +409,8 @@ body {
 }
 
 .search-results a:hover {
-  background: #232936;
-  color: #9cc9ff;
+  background: #243141;
+  color: var(--accent);
 }
 
 .search-empty {
@@ -396,21 +421,48 @@ body {
    Responsive
 ========================= */
 
-/* 태블릿 이하 */
-@media (max-width: 900px) {
+/* 중간 해상도 (노트북) */
+@media (max-width: 1320px) {
   .right-sidebar {
     display: none;
   }
 
-  .content {
+  .search-container {
+    right: 24px;
+    width: clamp(210px, 26vw, 240px);
+  }
+
+  main.layout .content {
+    margin-left: calc(var(--sidebar-w) + 20px);
     margin-right: 0;
-    margin-left: 232px;
-    padding: 40px 30px;
+    padding: 42px 28px 42px 12px;
+  }
+}
+
+/* 태블릿 이하 */
+@media (max-width: 980px) {
+  :root {
+    --sidebar-w: clamp(220px, 29vw, 280px);
+  }
+
+  .right-sidebar {
+    display: none;
+  }
+
+  main.layout {
+    margin: 0 20px;
+    height: auto;
   }
 
   .sidebar {
-    width: 220px;
+    width: var(--sidebar-w);
     padding: 24px 16px;
+  }
+
+  main.layout .content {
+    margin-right: 0;
+    margin-left: calc(var(--sidebar-w) + 12px);
+    padding: 38px 24px;
   }
 
   .profile img {
@@ -423,11 +475,13 @@ body {
   }
 }
 
-/* 모바일 */
-@media (max-width: 700px) {
+/* 모바일·좁은 태블릿 */
+@media (max-width: 860px) {
 
   .layout {
     display: block;
+    margin: 0;
+    height: auto;
   }
 
   .sidebar {
@@ -462,8 +516,11 @@ body {
     margin-top: 20px;
   }
 
-  .content {
+  main.layout .content {
     margin-left: 0;
+    margin-right: 0;
+    max-width: 100%;
+    width: 100%;
     padding: 32px 20px;
   }
 
@@ -534,7 +591,7 @@ body {
     padding: 24px 16px;
   }
 
-  .content {
+  main.layout .content {
     padding: 28px 16px;
   }
 
@@ -565,7 +622,7 @@ body {
   top: 136px;
   right: 43px;
 
-  width: 200px;
+  width: 280px;
   z-index: 100;
 }
 
@@ -577,9 +634,10 @@ body {
   width: 100%;
   padding: 20px;
 
-  background: #1b1f27 !important;
-  border: 1px solid #2b3240;
-  border-radius: 14px !important;
+  background: var(--bg-panel) !important;
+  border: 1px solid var(--line-soft);
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-soft);
 
   color: #ddd;
 }
@@ -636,5 +694,5 @@ body {
 
 .recent-posts a:hover,
 .market-panel a:hover {
-  color: #9cc9ff;
+  color: var(--accent);
 }
