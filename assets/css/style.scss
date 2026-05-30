@@ -391,6 +391,11 @@ main.layout .content {
   font-size: 13px;
 }
 
+.post-actions-head {
+  margin-top: 8px;
+  margin-bottom: 14px;
+}
+
 .post-actions .like-btn {
   border: 0;
   background: transparent;
@@ -435,12 +440,29 @@ main.layout .content {
 }
 
 .series-section {
-  margin-top: 30px;
+  margin-top: 34px;
   padding: 18px 16px 16px;
   border: 1px solid #3a4657;
   border-top: 2px solid #4e6078;
   border-radius: var(--radius-md);
   background: #18202a;
+  position: relative;
+}
+
+.series-section::before {
+  content: "";
+  position: absolute;
+  top: -14px;
+  left: 0;
+  width: 100%;
+  border-top: 1px solid var(--line-soft);
+  opacity: 0.9;
+}
+
+.post-body-with-series {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line-soft);
 }
 
 .series-title {
@@ -450,11 +472,48 @@ main.layout .content {
 
 .series-list {
   margin: 0;
-  padding-left: 16px;
+  padding: 0;
+  list-style: none;
 }
 
 .series-list li {
   margin-bottom: 8px;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  background: #1c2531;
+  overflow: hidden;
+}
+
+.series-list li a {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  color: #dbe4ef;
+  text-decoration: none;
+}
+
+.series-list li a:hover {
+  color: var(--accent);
+}
+
+.series-list li.is-current {
+  border-color: #5f7897;
+  background: #223044;
+  padding: 10px 12px;
+}
+
+.series-current-badge {
+  display: inline-block;
+  margin-right: 8px;
+  padding: 2px 8px;
+  font-size: 11px;
+  color: #9ec5ff;
+  border: 1px solid #4b6b90;
+  border-radius: 999px;
+}
+
+.series-current-title {
+  color: #e6f0ff;
 }
 
 /* =========================
@@ -887,4 +946,17 @@ main.layout .content {
 .recent-posts a:hover,
 .market-panel a:hover {
   color: var(--accent);
+}
+
+/* 세로 높이에 따라 사이드바 위젯 단계적 숨김 */
+@media (max-height: 1200px) {
+  .market-panel {
+    display: none;
+  }
+}
+
+@media (max-height: 1040px) {
+  .sidebar-widgets {
+    display: none;
+  }
 }

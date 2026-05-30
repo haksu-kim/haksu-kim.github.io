@@ -6,26 +6,16 @@ layout: default
 {%- assign now_ts = 'now' | date: '%s' -%}
 {%- assign post_ts = page.date | date: '%s' -%}
 {%- assign days_ago = now_ts | minus: post_ts | divided_by: 86400 -%}
+{%- assign related_series_posts = site.posts | where: "series", page.series -%}
+{%- assign show_series_box = false -%}
+{%- if page.series and related_series_posts.size > 1 -%}
+  {%- assign show_series_box = true -%}
+{%- endif -%}
 <div class="post-container">
   <a class="post-link" href="{{ page.url | relative_url }}">
     <h2 class="post-title">{{ page.title | escape }}</h2>
   </a>
-  <div class="post-meta">
-    {%- if page.categories.size > 0 -%}
-    <ul class="post-categories">
-      {%- for tag in page.categories -%}
-      <li>{{ tag }}</li>
-      {%- endfor -%}
-    </ul>
-    {%- endif -%}
-  </div>
-  {%- if page.series -%}
-  <div class="post-series">
-    <span class="series-label">↳</span>
-    <span class="series-name">{{ page.series }}</span>
-  </div>
-  {%- endif -%}
-  <div class="post-actions">
+  <div class="post-actions post-actions-head">
     {%- assign utterances_count = site.data.utterances_comments.comments[page.url] -%}
     {%- assign resolved_comments_count = utterances_count | default: page.comments_count | default: 0 -%}
     <button type="button" class="like-btn" data-post-id="{{ page.url }}" aria-label="좋아요">
@@ -42,26 +32,26 @@ layout: default
       {%- endif -%}
     </span>
   </div>
-  <div class="post post-body">
-    {{ content }}
-  </div>
-  {%- if page.series -%}
-    {%- assign related_series_posts = site.posts | where: "series", page.series -%}
-    {%- if related_series_posts.size > 1 -%}
+  {%- if show_series_box -%}
     <section class="series-section">
       <h3 class="series-title">{{ page.series }} 시리즈</h3>
       <ul class="series-list">
         {%- for series_post in related_series_posts -%}
-          {%- unless series_post.url == page.url -%}
-          <li>
-            <a href="{{ series_post.url | relative_url }}">{{ series_post.title }}</a>
+          <li class="{% if series_post.url == page.url %}is-current{% endif %}">
+            {%- if series_post.url == page.url -%}
+              <span class="series-current-badge">현재 글</span>
+              <span class="series-current-title">{{ series_post.title }}</span>
+            {%- else -%}
+              <a href="{{ series_post.url | relative_url }}">{{ series_post.title }}</a>
+            {%- endif -%}
           </li>
-          {%- endunless -%}
         {%- endfor -%}
       </ul>
     </section>
-    {%- endif -%}
   {%- endif -%}
+  <div class="post post-body{% if show_series_box %} post-body-with-series{% endif %}">
+    {{ content }}
+  </div>
   {%- if site.plainwhite.comments.provider == "utterances" and site.plainwhite.comments.utterances.repo -%}
   <section class="post-comments">
     <script
