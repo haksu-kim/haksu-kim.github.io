@@ -18,12 +18,14 @@ permissions:
 jobs:
   update-comments:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Generate comment data from utterances issues
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const fs = require("fs");
@@ -39,12 +41,45 @@ jobs:
               per_page: 100
             });
 
+            function normalizePath(input) {
+              if (!input) return null;
+              let s = String(input).trim();
+              if (!s) return null;
+
+              // Try URL parsing first (supports absolute URL in issue title)
+              try {
+                const u = new URL(s);
+                s = u.pathname || s;
+              } catch (_) {}
+
+              // Extract first path-like token if mixed text
+              const m = s.match(/\/[A-Za-z0-9\-/_\.]+\/?/);
+              if (m) s = m[0];
+
+              if (!s.startsWith("/")) return null;
+              s = s.replace(/\/index\.html$/i, "/");
+              s = s.replace(/\/{2,}/g, "/");
+              if (s.length > 1 && s.endsWith("/")) s = s.slice(0, -1);
+              return s;
+            }
+
+            function setAliases(target, key, count) {
+              if (!key) return;
+              const noSlash = key;
+              const withSlash = key === "/" ? "/" : key + "/";
+              const indexHtml = key === "/" ? "/index.html" : key + "/index.html";
+              target[noSlash] = count;
+              target[withSlash] = count;
+              target[indexHtml] = count;
+            }
+
             const comments = {};
             for (const issue of issues) {
               if (issue.pull_request) continue;
-              const key = (issue.title || "").trim();
-              if (!key || !key.startsWith("/")) continue;
-              comments[key] = issue.comments || 0;
+              const title = (issue.title || "").trim();
+              const normalized = normalizePath(title);
+              if (!normalized) continue;
+              setAliases(comments, normalized, issue.comments || 0);
             }
 
             const out = {
