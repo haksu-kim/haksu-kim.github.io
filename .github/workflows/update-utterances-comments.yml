@@ -1,0 +1,73 @@
+name: Update Utterances Comment Counts
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 * * * *"
+  push:
+    branches: ["main", "master"]
+    paths:
+      - "_posts/**"
+      - "_config.yml"
+      - ".github/workflows/update-utterances-comments.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  update-comments:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate comment data from utterances issues
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require("fs");
+            const path = require("path");
+
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+
+            const issues = await github.paginate(github.rest.issues.listForRepo, {
+              owner,
+              repo,
+              state: "all",
+              labels: "utterances",
+              per_page: 100
+            });
+
+            const comments = {};
+            for (const issue of issues) {
+              if (issue.pull_request) continue;
+              const key = (issue.title || "").trim();
+              if (!key || !key.startsWith("/")) continue;
+              comments[key] = issue.comments || 0;
+            }
+
+            const out = {
+              updated_at: new Date().toISOString(),
+              comments
+            };
+
+            const outDir = path.join(process.cwd(), "_data");
+            fs.mkdirSync(outDir, { recursive: true });
+            fs.writeFileSync(
+              path.join(outDir, "utterances_comments.json"),
+              JSON.stringify(out, null, 2) + "\n",
+              "utf8"
+            );
+
+      - name: Commit and push if changed
+        run: |
+          if git diff --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add _data/utterances_comments.json
+          git commit -m "chore: update utterances comment counts"
+          git push

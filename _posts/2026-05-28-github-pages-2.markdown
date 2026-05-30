@@ -3,6 +3,8 @@ layout: post
 title:  "Github Pages로 기술 블로그 만들기 - Error편"
 date:   2026-05-28 19:48:36 +0900
 categories: Git
+series: Github Pages 만들기
+comments_count: 0
 ---
 
 이번 편에서는 Github Pages로 기술 블로그 만들면서 겪었던 각종 에러에 대한 해결법을 기술했습니다.

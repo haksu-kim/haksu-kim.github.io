@@ -9,18 +9,28 @@ layout: default
 {{ content }}
 
 {%- if site.posts.size > 0 -%}
+  <div class="post-list-toolbar">
+    <span class="toolbar-label">정렬</span>
+    <button type="button" class="sort-btn is-active" data-sort="likes">인기순</button>
+    <button type="button" class="sort-btn" data-sort="recent">최신순</button>
+  </div>
+
   <ul class="posts">
     {%- for post in site.posts -%}
-      <li>
+      {%- assign now_ts = 'now' | date: '%s' -%}
+      {%- assign post_ts = post.date | date: '%s' -%}
+      {%- assign days_ago = now_ts | minus: post_ts | divided_by: 86400 -%}
+      <li
+        data-post-id="{{ post.url }}"
+        data-post-date="{{ post.date | date: '%s' }}"
+        data-categories="{{ post.categories | join: ',' | downcase }}"
+        data-series="{{ post.series | default: '' | downcase }}"
+      >
         {%- assign date_format = site.plainwhite.date_format | default: "%b %-d, %Y" -%}
         <a class="post-link" href="{{ post.url | relative_url }}">
           <h2 class="post-title">{{ post.title | escape }}</h2>
         </a>
         <div class="post-meta">
-          <div class="post-date">
-            <i class="icon-calendar"></i>
-            {{ post.date | date: date_format }}
-          </div>
           {%- if post.categories.size > 0-%}
           <ul class="post-categories">
             {%- for tag in post.categories -%}
@@ -29,10 +39,33 @@ layout: default
           </ul>
           {%- endif -%}
         </div>
+        {%- if post.series -%}
+        <div class="post-series">
+          <span class="series-label">↳</span>
+          <span class="series-name">{{ post.series }}</span>
+        </div>
+        {%- endif -%}
         <div class="post">
           {%- if site.show_excerpts -%}
             {{ post.excerpt }}
           {%- endif -%}
+        </div>
+        <div class="post-actions">
+          {%- assign utterances_count = site.data.utterances_comments.comments[post.url] -%}
+          {%- assign resolved_comments_count = utterances_count | default: post.comments_count | default: 0 -%}
+          <button type="button" class="like-btn" data-post-id="{{ post.url }}" aria-label="좋아요">
+            좋아요 <span class="like-count" data-post-id="{{ post.url }}">0</span>
+          </button>
+          <span class="post-stat-divider">·</span>
+          <span class="post-stat">댓글 {{ resolved_comments_count }}</span>
+          <span class="post-stat-divider">·</span>
+          <span class="post-stat">
+            {%- if days_ago <= 0 -%}
+              오늘 등록
+            {%- else -%}
+              {{ days_ago }}일 전
+            {%- endif -%}
+          </span>
         </div>
       </li>
     {%- endfor -%}

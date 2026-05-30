@@ -3,12 +3,14 @@ layout: default
 ---
 
 {%- assign date_format = site.plainwhite.date_format | default: "%b %-d, %Y" -%}
+{%- assign now_ts = 'now' | date: '%s' -%}
+{%- assign post_ts = page.date | date: '%s' -%}
+{%- assign days_ago = now_ts | minus: post_ts | divided_by: 86400 -%}
 <div class="post-container">
   <a class="post-link" href="{{ page.url | relative_url }}">
     <h2 class="post-title">{{ page.title | escape }}</h2>
   </a>
   <div class="post-meta">
-    <div class="post-date"><i class="icon-calendar"></i>{{ page.date | date: date_format }}</div>
     {%- if page.categories.size > 0 -%}
     <ul class="post-categories">
       {%- for tag in page.categories -%}
@@ -17,11 +19,51 @@ layout: default
     </ul>
     {%- endif -%}
   </div>
-  <div class="post">
+  {%- if page.series -%}
+  <div class="post-series">
+    <span class="series-label">↳</span>
+    <span class="series-name">{{ page.series }}</span>
+  </div>
+  {%- endif -%}
+  <div class="post-actions">
+    {%- assign utterances_count = site.data.utterances_comments.comments[page.url] -%}
+    {%- assign resolved_comments_count = utterances_count | default: page.comments_count | default: 0 -%}
+    <button type="button" class="like-btn" data-post-id="{{ page.url }}" aria-label="좋아요">
+      좋아요 <span class="like-count" data-post-id="{{ page.url }}">0</span>
+    </button>
+    <span class="post-stat-divider">·</span>
+    <span class="post-stat">댓글 {{ resolved_comments_count }}</span>
+    <span class="post-stat-divider">·</span>
+    <span class="post-stat">
+      {%- if days_ago <= 0 -%}
+        오늘 등록
+      {%- else -%}
+        {{ days_ago }}일 전
+      {%- endif -%}
+    </span>
+  </div>
+  <div class="post post-body">
     {{ content }}
   </div>
+  {%- if page.series -%}
+    {%- assign related_series_posts = site.posts | where: "series", page.series -%}
+    {%- if related_series_posts.size > 1 -%}
+    <section class="series-section">
+      <h3 class="series-title">{{ page.series }} 시리즈</h3>
+      <ul class="series-list">
+        {%- for series_post in related_series_posts -%}
+          {%- unless series_post.url == page.url -%}
+          <li>
+            <a href="{{ series_post.url | relative_url }}">{{ series_post.title }}</a>
+          </li>
+          {%- endunless -%}
+        {%- endfor -%}
+      </ul>
+    </section>
+    {%- endif -%}
+  {%- endif -%}
   {%- if site.plainwhite.comments.provider == "utterances" and site.plainwhite.comments.utterances.repo -%}
-  <section class="post-comments" style="margin-top: 30px;">
+  <section class="post-comments">
     <script
       src="https://utteranc.es/client.js"
       repo="{{ site.plainwhite.comments.utterances.repo }}"
@@ -32,7 +74,7 @@ layout: default
     </script>
   </section>
   {%- elsif site.plainwhite.comments.provider == "disqus" and site.plainwhite.disqus_shortname -%}
-  <div id="disqus_thread" style="margin-top:25px"></div>
+  <div id="disqus_thread" class="post-comments"></div>
   <script>
     var disqus_config = function () {
       this.page.url = '{{ page.url | absolute_url }}';

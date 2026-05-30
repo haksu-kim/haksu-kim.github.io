@@ -24,17 +24,42 @@
       <nav class="menu">
         <div class="menu-title">CATEGORIES</div>
 
-        <ul class="category-list">
+        <div class="category-tree">
           {% for category in site.categories %}
-          <li>
-            <a href="{{ '/categories/' | relative_url }}#{{ category[0] }}">
+          <details class="category-group">
+            <summary class="category-parent">
               <span class="menu-icon">#</span>
               <span>{{ category[0] }}</span>
               <span class="category-count">{{ category[1].size }}</span>
-            </a>
-          </li>
+            </summary>
+
+            <div class="category-children">
+              <a
+                href="{{ '/' | relative_url }}?category={{ category[0] | url_encode }}"
+                class="category-child all"
+              >
+                전체 보기
+              </a>
+
+              {% assign series_tokens = "" %}
+              {% for cat_post in category[1] %}
+                {% if cat_post.series %}
+                  {% assign token = "||" | append: cat_post.series | append: "||" %}
+                  {% unless series_tokens contains token %}
+                    {% assign series_tokens = series_tokens | append: token %}
+                    <a
+                      href="{{ '/' | relative_url }}?category={{ category[0] | url_encode }}&series={{ cat_post.series | url_encode }}"
+                      class="category-child"
+                    >
+                      {{ cat_post.series }}
+                    </a>
+                  {% endunless %}
+                {% endif %}
+              {% endfor %}
+            </div>
+          </details>
           {% endfor %}
-        </ul>
+        </div>
 
         <div class="menu-title">PAGES</div>
 
@@ -48,6 +73,76 @@
           <span>ABOUT</span>
         </a>
       </nav>
+
+      {% if page.url == "/" %}
+      <div class="sidebar-widgets">
+        <section class="recent-posts">
+          <h3>Recent Posts</h3>
+
+          <ul>
+            {% for post in site.posts limit:5 %}
+            <li>
+              <a href="{{ post.url | relative_url }}">
+                {{ post.title }}
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </section>
+
+        <section class="market-panel">
+          <h3>Market</h3>
+
+          <div class="market-widget">
+            <div class="tradingview-widget-container">
+              <div class="tradingview-widget-container__widget"></div>
+              <script
+                type="text/javascript"
+                src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js"
+                async>
+                {
+                  "colorTheme": "dark",
+                  "dateRange": "1D",
+                  "showChart": false,
+                  "locale": "kr",
+                  "largeChartUrl": "",
+                  "isTransparent": true,
+                  "showSymbolLogo": false,
+                  "showFloatingTooltip": false,
+                  "width": "100%",
+                  "height": "420",
+                  "tabs": [
+                    {
+                      "title": "국내",
+                      "symbols": [
+                        { "s": "KRX:KOSPI", "d": "KOSPI" },
+                        { "s": "KRX:KOSDAQ", "d": "KOSDAQ" }
+                      ]
+                    },
+                    {
+                      "title": "미국",
+                      "symbols": [
+                        { "s": "FOREXCOM:SPXUSD", "d": "S&P 500" },
+                        { "s": "FOREXCOM:NSXUSD", "d": "NASDAQ 100" },
+                        { "s": "FOREXCOM:DJI", "d": "Dow" }
+                      ]
+                    },
+                    {
+                      "title": "환율",
+                      "symbols": [
+                        { "s": "FX_IDC:USDKRW", "d": "USD/KRW" },
+                        { "s": "FX_IDC:EURKRW", "d": "EUR/KRW" },
+                        { "s": "FX_IDC:JPYKRW", "d": "JPY/KRW" }
+                      ]
+                    }
+                  ]
+                }
+              </script>
+            </div>
+          </div>
+        </section>
+      </div>
+      {% endif %}
 
       <div class="sidebar-footer">
         <ul class="sidebar-social">
@@ -118,6 +213,7 @@
       </div>
     </aside>
 
+    {% if page.url == "/" %}
     <div class="search-container">
       <input
         type="text"
@@ -129,80 +225,11 @@
       >
       <div id="search-results" class="search-results" aria-live="polite"></div>
     </div>
+    {% endif %}
 
     <section class="content">
       {{ content }}
     </section>
-
-{% if page.url == "/" %}
-<aside class="right-sidebar">
-  <section class="recent-posts">
-    <h3>Recent Posts</h3>
-
-    <ul>
-      {% for post in site.posts limit:5 %}
-      <li>
-        <a href="{{ post.url | relative_url }}">
-          {{ post.title }}
-        </a>
-      </li>
-      {% endfor %}
-    </ul>
-  </section>
-
-  <section class="market-panel">
-    <h3>Market</h3>
-
-    <div class="market-widget">
-      <div class="tradingview-widget-container">
-        <div class="tradingview-widget-container__widget"></div>
-        <script
-          type="text/javascript"
-          src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js"
-          async>
-          {
-            "colorTheme": "dark",
-            "dateRange": "1D",
-            "showChart": false,
-            "locale": "kr",
-            "largeChartUrl": "",
-            "isTransparent": true,
-            "showSymbolLogo": false,
-            "showFloatingTooltip": false,
-            "width": "100%",
-            "height": "420",
-            "tabs": [
-              {
-                "title": "국내",
-                "symbols": [
-                  { "s": "KRX:KOSPI", "d": "KOSPI" },
-                  { "s": "KRX:KOSDAQ", "d": "KOSDAQ" }
-                ]
-              },
-              {
-                "title": "미국",
-                "symbols": [
-                  { "s": "FOREXCOM:SPXUSD", "d": "S&P 500" },
-                  { "s": "FOREXCOM:NSXUSD", "d": "NASDAQ 100" },
-                  { "s": "FOREXCOM:DJI", "d": "Dow" }
-                ]
-              },
-              {
-                "title": "환율",
-                "symbols": [
-                  { "s": "FX_IDC:USDKRW", "d": "USD/KRW" },
-                  { "s": "FX_IDC:EURKRW", "d": "EUR/KRW" },
-                  { "s": "FX_IDC:JPYKRW", "d": "JPY/KRW" }
-                ]
-              }
-            ]
-          }
-        </script>
-      </div>
-    </div>
-  </section>
-</aside>
-{% endif %}
 
   </main>
 
@@ -227,6 +254,7 @@
   {% if site.plainwhite.search %}
   <script src="{{ '/assets/js/search.js' | relative_url }}"></script>
   {% endif %}
+  <script src="{{ '/assets/js/post-engagement.js' | relative_url }}"></script>
 
 </body>
 
