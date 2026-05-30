@@ -957,7 +957,7 @@ main.layout .content {
   position: fixed;
   right: 22px;
   bottom: 24px;
-  z-index: 2500;
+  z-index: 4000;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -970,6 +970,7 @@ main.layout .content {
   border-radius: 10px;
   background: #1f2733;
   color: #dbe4ef;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.28);
   cursor: pointer;
   font-size: 16px;
   line-height: 1;

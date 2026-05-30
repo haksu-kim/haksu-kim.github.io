@@ -68,9 +68,11 @@ jobs:
               const noSlash = key;
               const withSlash = key === "/" ? "/" : key + "/";
               const indexHtml = key === "/" ? "/index.html" : key + "/index.html";
+              const html = key === "/" ? "/index.html" : key + ".html";
               target[noSlash] = count;
               target[withSlash] = count;
               target[indexHtml] = count;
+              target[html] = count;
             }
 
             const comments = {};
