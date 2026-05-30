@@ -58,12 +58,14 @@ layout: default
           {%- assign post_key_3 = post.url | remove: "/index.html" -%}
           {%- assign post_key_4 = post_key_3 | append: "/" -%}
           {%- assign post_key_5 = post_key_3 | append: ".html" -%}
+          {%- assign post_key_6 = "slug:" | append: post.slug -%}
           {%- assign utterances_count = comments_map[post_key_0]
             | default: comments_map[post_key_1]
             | default: comments_map[post_key_2]
             | default: comments_map[post_key_3]
             | default: comments_map[post_key_4]
             | default: comments_map[post_key_5]
+            | default: comments_map[post_key_6]
           -%}
           {%- assign resolved_comments_count = utterances_count | default: post.comments_count | default: 0 -%}
           <button type="button" class="like-btn" data-post-id="{{ post.url }}" aria-label="좋아요">
