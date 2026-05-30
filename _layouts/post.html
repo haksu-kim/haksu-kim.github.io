@@ -16,7 +16,18 @@ layout: default
     <h2 class="post-title">{{ page.title | escape }}</h2>
   </a>
   <div class="post-actions post-actions-head">
-    {%- assign utterances_count = site.data.utterances_comments.comments[page.url] -%}
+    {%- assign comments_map = site.data.utterances_comments.comments -%}
+    {%- assign page_key_0 = page.url -%}
+    {%- assign page_key_1 = page.url | append: "/" -%}
+    {%- assign page_key_2 = page.url | append: "/index.html" -%}
+    {%- assign page_key_3 = page.url | remove: "/index.html" -%}
+    {%- assign page_key_4 = page_key_3 | append: "/" -%}
+    {%- assign utterances_count = comments_map[page_key_0]
+      | default: comments_map[page_key_1]
+      | default: comments_map[page_key_2]
+      | default: comments_map[page_key_3]
+      | default: comments_map[page_key_4]
+    -%}
     {%- assign resolved_comments_count = utterances_count | default: page.comments_count | default: 0 -%}
     <button type="button" class="like-btn" data-post-id="{{ page.url }}" aria-label="좋아요">
       좋아요 <span class="like-count" data-post-id="{{ page.url }}">0</span>
@@ -80,4 +91,9 @@ layout: default
   <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments
       powered by Disqus.</a></noscript>
   {%- endif -%}
+</div>
+
+<div class="scroll-toggle" aria-label="빠른 이동">
+  <button type="button" class="scroll-toggle-btn" data-scroll-target="top" aria-label="맨 위로 이동">↑</button>
+  <button type="button" class="scroll-toggle-btn" data-scroll-target="bottom" aria-label="맨 아래로 이동">↓</button>
 </div>

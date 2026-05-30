@@ -124,5 +124,22 @@
     }
   }
 
+  function initScrollToggle() {
+    var wrapper = document.querySelector(".scroll-toggle");
+    if (!wrapper) return;
+
+    wrapper.querySelectorAll(".scroll-toggle-btn[data-scroll-target]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        var target = button.getAttribute("data-scroll-target");
+        if (target === "top") {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          return;
+        }
+        window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+      });
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", initLikeButtons);
+  document.addEventListener("DOMContentLoaded", initScrollToggle);
 })();
