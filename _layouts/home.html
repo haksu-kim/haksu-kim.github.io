@@ -10,8 +10,8 @@ layout: default
 
 {%- if site.posts.size > 0 -%}
   <div class="post-list-toolbar">
-    <span class="toolbar-label"></span>
-    <button type="button" class="sort-btn is-active" data-sort="likes">인기순</button>
+    <span class="toolbar-label">정렬</span>
+    <button type="button" class="sort-btn is-active" data-sort="comments">인기순</button>
     <button type="button" class="sort-btn" data-sort="recent">최신순</button>
   </div>
 
@@ -21,7 +21,6 @@ layout: default
       {%- assign post_ts = post.date | date: '%s' -%}
       {%- assign days_ago = now_ts | minus: post_ts | divided_by: 86400 -%}
       <li
-        data-post-id="{{ post.url }}"
         data-post-date="{{ post.date | date: '%s' }}"
         data-categories="{{ post.categories | join: ',' | downcase }}"
         data-series="{{ post.series | default: '' | downcase }}"
@@ -68,10 +67,7 @@ layout: default
             | default: comments_map[post_key_6]
           -%}
           {%- assign resolved_comments_count = utterances_count | default: post.comments_count | default: 0 -%}
-          <button type="button" class="like-btn" data-post-id="{{ post.url }}" aria-label="좋아요">
-            좋아요 <span class="like-count" data-post-id="{{ post.url }}">0</span>
-          </button>
-          <span class="post-stat-divider">·</span>
+          <span class="post-comments-value" hidden>{{ resolved_comments_count }}</span>
           <span class="post-stat">댓글 {{ resolved_comments_count }}</span>
           <span class="post-stat-divider">·</span>
           <span class="post-stat">

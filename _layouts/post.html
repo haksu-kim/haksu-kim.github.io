@@ -33,10 +33,6 @@ layout: default
       | default: comments_map[page_key_6]
     -%}
     {%- assign resolved_comments_count = utterances_count | default: page.comments_count | default: 0 -%}
-    <button type="button" class="like-btn" data-post-id="{{ page.url }}" aria-label="좋아요">
-      좋아요 <span class="like-count" data-post-id="{{ page.url }}">0</span>
-    </button>
-    <span class="post-stat-divider">·</span>
     <span class="post-stat">댓글 {{ resolved_comments_count }}</span>
     <span class="post-stat-divider">·</span>
     <span class="post-stat">

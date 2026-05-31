@@ -1,56 +1,23 @@
 (function () {
-  var STORAGE_KEY = "postLikes_v1";
-
-  function loadLikes() {
-    try {
-      var raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : {};
-    } catch (e) {
-      return {};
-    }
+  function getCommentCount(item) {
+    var valueNode = item.querySelector(".post-comments-value");
+    if (!valueNode) return 0;
+    return Number(valueNode.textContent || 0);
   }
 
-  function saveLikes(likes) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(likes));
-  }
-
-  function getLikes(postId, likes) {
-    return Number(likes[postId] || 0);
-  }
-
-  function setLikeCount(postId, count) {
-    var counters = document.querySelectorAll('.like-count[data-post-id="' + postId + '"]');
-    counters.forEach(function (el) {
-      el.textContent = String(count);
-    });
-  }
-
-  function refreshLikeCounts(likes) {
-    var counters = document.querySelectorAll(".like-count[data-post-id]");
-    counters.forEach(function (el) {
-      var postId = el.getAttribute("data-post-id");
-      el.textContent = String(getLikes(postId, likes));
-    });
-  }
-
-  function sortPosts(mode, likes) {
+  function sortPosts(mode) {
     var list = document.querySelector(".posts");
     if (!list) return;
 
-    var items = Array.prototype.slice.call(list.querySelectorAll("li[data-post-id]"));
+    var items = Array.prototype.slice.call(list.querySelectorAll("li[data-post-date]"));
     items.sort(function (a, b) {
-      var idA = a.getAttribute("data-post-id");
-      var idB = b.getAttribute("data-post-id");
-      var likesA = getLikes(idA, likes);
-      var likesB = getLikes(idB, likes);
+      if (mode === "comments") {
+        var commentsA = getCommentCount(a);
+        var commentsB = getCommentCount(b);
+        if (commentsA !== commentsB) return commentsB - commentsA;
+      }
       var dateA = Number(a.getAttribute("data-post-date") || 0);
       var dateB = Number(b.getAttribute("data-post-date") || 0);
-
-      if (mode === "recent") {
-        return dateB - dateA;
-      }
-
-      if (likesA !== likesB) return likesB - likesA;
       return dateB - dateA;
     });
 
@@ -69,7 +36,7 @@
 
     if (!category && !series) return;
 
-    var items = Array.prototype.slice.call(list.querySelectorAll("li[data-post-id]"));
+    var items = Array.prototype.slice.call(list.querySelectorAll("li[data-post-date]"));
     items.forEach(function (item) {
       var categories = (item.getAttribute("data-categories") || "").toLowerCase();
       var itemSeries = (item.getAttribute("data-series") || "").toLowerCase();
@@ -89,41 +56,6 @@
     });
   }
 
-  function initLikeButtons() {
-    var likes = loadLikes();
-    refreshLikeCounts(likes);
-
-    document.querySelectorAll(".like-btn[data-post-id]").forEach(function (button) {
-      button.addEventListener("click", function () {
-        var postId = button.getAttribute("data-post-id");
-        var nextLikes = loadLikes();
-        var updatedCount = getLikes(postId, nextLikes) + 1;
-        nextLikes[postId] = updatedCount;
-        saveLikes(nextLikes);
-        setLikeCount(postId, updatedCount);
-
-        var activeSort = document.querySelector(".sort-btn.is-active");
-        if (activeSort && activeSort.getAttribute("data-sort") === "likes") {
-          sortPosts("likes", nextLikes);
-        }
-      });
-    });
-
-    document.querySelectorAll(".sort-btn[data-sort]").forEach(function (button) {
-      button.addEventListener("click", function () {
-        var mode = button.getAttribute("data-sort");
-        setActiveSortButton(mode);
-        sortPosts(mode, loadLikes());
-      });
-    });
-
-    if (document.querySelector(".posts")) {
-      setActiveSortButton("likes");
-      sortPosts("likes", likes);
-      applyCategoryFilter();
-    }
-  }
-
   function initScrollToggle() {
     var wrapper = document.querySelector(".scroll-toggle");
     if (!wrapper) return;
@@ -140,6 +72,19 @@
     });
   }
 
-  document.addEventListener("DOMContentLoaded", initLikeButtons);
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".sort-btn[data-sort]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        var mode = button.getAttribute("data-sort");
+        setActiveSortButton(mode);
+        sortPosts(mode);
+        applyCategoryFilter();
+      });
+    });
+
+    setActiveSortButton("comments");
+    sortPosts("comments");
+    applyCategoryFilter();
+  });
   document.addEventListener("DOMContentLoaded", initScrollToggle);
 })();

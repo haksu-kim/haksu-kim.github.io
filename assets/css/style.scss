@@ -99,6 +99,8 @@ body {
 .menu {
   margin-top: 30px;
   flex: 1;
+  min-width: 0;
+  overflow-x: hidden;
 }
 
 .menu-title {
@@ -156,14 +158,17 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 0;
 }
 
 .category-group {
   margin: 0;
+  width: 100%;
 }
 
 .category-parent {
-  display: flex;
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
@@ -171,10 +176,17 @@ body {
   border-radius: var(--radius-md);
   cursor: pointer;
   list-style: none;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
 }
 
 .category-parent::-webkit-details-marker {
   display: none;
+}
+
+.category-parent::marker {
+  content: "";
 }
 
 .category-parent:hover {
@@ -184,10 +196,12 @@ body {
 
 .category-children {
   margin-top: 6px;
-  margin-left: 18px;
+  margin-left: 0;
+  padding-left: 18px;
   display: flex;
   flex-direction: column;
   gap: 6px;
+  box-sizing: border-box;
 }
 
 .category-child {
@@ -196,6 +210,15 @@ body {
   font-size: 13px;
   padding: 6px 10px;
   border-radius: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.category-parent span:nth-child(2) {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .category-child:hover {
@@ -396,20 +419,6 @@ main.layout .content {
   margin-bottom: 14px;
 }
 
-.post-actions .like-btn {
-  border: 0;
-  background: transparent;
-  color: var(--text-soft);
-  border-radius: 0;
-  padding: 0;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.post-actions .like-btn:hover {
-  color: var(--accent);
-}
-
 .post-stat-divider {
   color: #637181;
 }
@@ -600,6 +609,11 @@ main.layout .content {
   background: transparent !important;
   border: 0 !important;
   border-radius: 0 !important;
+  max-width: 100%;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .post-categories li::before {
@@ -809,8 +823,7 @@ main.layout .content {
     gap: 6px;
   }
 
-  .sort-btn,
-  .post-actions .like-btn {
+  .sort-btn {
     font-size: 12px;
   }
 
@@ -837,6 +850,26 @@ main.layout .content {
 
 /* 770px 전후 가독성 보정 */
 @media (max-width: 770px) {
+  .post-meta {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .post-categories {
+    display: inline-flex;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .post-categories li {
+    display: inline-flex;
+    width: auto;
+    max-width: 100%;
+    min-width: 0;
+  }
+
   main.layout .content {
     margin-left: 0;
     margin-right: 0;
