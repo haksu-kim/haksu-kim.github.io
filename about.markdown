@@ -4,15 +4,19 @@ title: About
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
+안녕하세요, Frontend Developer **학수**입니다.
 
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
+React, Java, Python 등 다양한 기술을 공부하며 개발자로 성장하고 있습니다.  
+프로젝트를 진행하면서 배운 것들, 문제 해결 과정, 유용한 팁들을 이 블로그에 기록하고 있습니다.
 
-You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
+## 기술 스택
 
+- **Frontend**: React, HTML, CSS, JavaScript
+- **Backend**: Java, Python
+- **Tools**: Git, GitHub Pages, Jekyll
 
-[jekyll-organization]: https://github.com/jekyll
+## Contact
+
+- 📧 [haksu2960@gmail.com](mailto:haksu2960@gmail.com)
+- 🐙 [GitHub](https://github.com/haksu-kim)
+- 📸 [Instagram](https://instagram.com/mxthxim)

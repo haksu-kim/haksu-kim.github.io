@@ -161,7 +161,7 @@ bundle exec jekyll serve
 ```bash
 Server address: http://127.0.0.1:4000/
 ```
-![](https://velog.velcdn.com/images/haksu-kim/post/2e254f56-9a11-479b-88aa-764385c104ed/image.png)
+![로컬 서버 실행 화면](/assets/images/2026-05-28-github-pages-1/local-server.png)
 
 ### 5. 원격 repo에 push
 
