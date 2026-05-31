@@ -73,7 +73,8 @@
   }
 
   document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".sort-btn[data-sort]").forEach(function (button) {
+    var sortButtons = document.querySelectorAll(".sort-btn[data-sort]");
+    sortButtons.forEach(function (button) {
       button.addEventListener("click", function () {
         var mode = button.getAttribute("data-sort");
         setActiveSortButton(mode);
@@ -82,9 +83,11 @@
       });
     });
 
-    setActiveSortButton("comments");
-    sortPosts("comments");
-    applyCategoryFilter();
+    if (sortButtons.length) {
+      setActiveSortButton("comments");
+      sortPosts("comments");
+      applyCategoryFilter();
+    }
   });
   document.addEventListener("DOMContentLoaded", initScrollToggle);
 })();

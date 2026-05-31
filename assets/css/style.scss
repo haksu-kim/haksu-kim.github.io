@@ -60,6 +60,7 @@ body {
   box-shadow: 8px 0 24px rgba(0, 0, 0, 0.18);
 
   overflow-y: auto;
+  overflow-x: hidden;
 
   display: flex;
   flex-direction: column;
@@ -179,6 +180,7 @@ body {
   width: 100%;
   box-sizing: border-box;
   min-width: 0;
+  max-width: 100%;
 }
 
 .category-parent::-webkit-details-marker {
@@ -198,10 +200,12 @@ body {
   margin-top: 6px;
   margin-left: 0;
   padding-left: 18px;
+  padding-right: 0;
   display: flex;
   flex-direction: column;
   gap: 6px;
   box-sizing: border-box;
+  max-width: 100%;
 }
 
 .category-child {
@@ -212,6 +216,8 @@ body {
   border-radius: 8px;
   width: 100%;
   box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .category-parent span:nth-child(2) {
@@ -235,8 +241,10 @@ body {
 }
 
 .category-count {
-  margin-left: auto;
-
+  margin-left: 0;
+  justify-self: end;
+  text-align: right;
+  min-width: 2ch;
   font-size: 12px;
   color: #777;
 }
@@ -383,6 +391,8 @@ main.layout .content {
   align-items: center;
   gap: 8px;
   margin: 0 0 18px;
+  position: relative;
+  z-index: 2;
 }
 
 .toolbar-label {
