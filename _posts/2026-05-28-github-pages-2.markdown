@@ -33,6 +33,6 @@ x표시 되어 있는 목록을 눌러보면,
 github-pages 000 | Error: The plainwhite theme could not be found.
 ```
 
-*config.yml 파일 맨 하단에 theme를 주석 처리 해주면 된다.
+- config.yml 파일 맨 하단에 theme를 주석 처리 해주면 된다.
 
 ![4.png](/assets/images/2026-05-28-github-pages-2/4.png)

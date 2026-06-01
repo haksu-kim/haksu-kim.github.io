@@ -1,9 +1,8 @@
-title: DEBUG_DIARY
-author: 학수
+title: KIMHAKSU
+author: 김학수
 email: haksu2960@gmail.com
 description: >
-  Frontend Developer 학수의 기술 블로그입니다.
-  React, Java, Python 등 개발하면서 배운 것들을 기록합니다.
+  Frontend Developer 김학수의 기술 블로그입니다.
 show_excerpts: true # set to true to show excerpts on the homepage
 
 # Minima date format
@@ -11,7 +10,7 @@ show_excerpts: true # set to true to show excerpts on the homepage
 sass:
   sass_dir: _sass
 plainwhite:
-  name: HAKSU
+  name: KIMHAKSU
   tagline: Frontend Developer
   date_format: "%Y-%m-%d"
   sitemap: true # set to true to generate sitemap.xml content
